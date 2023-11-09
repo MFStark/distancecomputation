@@ -1,0 +1,18 @@
+{
+  "template": "https://github.com/collijk/python-package-cookiecutter",
+  "commit": "950d4976f7804b85d7a542197422664419ff94b3",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "author_name": "mfiking",
+      "author_email": "mfikingas@gmail.com",
+      "github_username": "MFStark",
+      "project_name": "distance-computation",
+      "project_slug": "distance-computation",
+      "package_name": "distancecomputation",
+      "project_short_description": "ter data",
+      "_template": "https://github.com/collijk/python-package-cookiecutter"
+    }
+  },
+  "directory": null
+}
