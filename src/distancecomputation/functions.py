@@ -1,5 +1,5 @@
 # Generate expanded bounding box for rasterization
-def expand_bounding_box(gdf):
+def expand_bounding_box(gdf: GeoDataFrame) -> pd.DataFrame:
 
     # Generate original bounding box 
     bbox = gdf.geometry.bounds
@@ -32,7 +32,7 @@ def expand_bounding_box(gdf):
     return expanded_bbox
 
 # Get Meta data from TIF file
-def get_metadata(tif_file_path):
+def get_metadata(tif_file_path: Path) -> Tuple[dict, Tuple[int, int], Affine, CRS]:
     with rasterio.open(tif_file_path) as src:
         out_meta = src.meta
         shape = src.shape
@@ -46,7 +46,7 @@ def get_metadata(tif_file_path):
 
 
 # Generate expanded shape and new transform 
-def expand_shape_and_transform(original_shape, original_transform):
+def expand_shape_and_transform(original_shape: Tuple[int, int], original_transform: Affine) -> Tuple[Tuple[int, int], Affine]:
 
     # New shape
     new_shape = (original_shape[0]*3, original_shape[1]*3)
@@ -68,7 +68,7 @@ def expand_shape_and_transform(original_shape, original_transform):
 
 
 # Rasterize geometeries found in a GDF onto an empty array based on an existing transform
-def rasterize(gdf, out_shape, transform):
+def rasterize(gdf: GeoDataFrame, out_shape: Tuple[int, int], transform: Affine) -> np.ndarray:
     # Rasterize the GeoDataFrame
     rasterized = rasterio.features.rasterize(
         [(geom, 1) for geom in gdf.geometry],
@@ -85,7 +85,7 @@ def rasterize(gdf, out_shape, transform):
     return rasterized
 
 # Subset expanded distance array to original size
-def subset_array(original_shape, computed_array):
+def subset_array(original_shape: Tuple[int, int], computed_array: np.ndarray) -> np.ndarray:
 
     # Create rows and columns
     start_row = original_shape[0]
@@ -126,7 +126,7 @@ def mask_admin(in_path: Path, admin_path: Path, out_path: Path):
 
 # Create Diagnostic Plots
 
-def generate_plots(admin_gdf, vector_gdf, out_path, save_path):
+def generate_plots(admin_gdf: GeoDataFrame, vector_gdf: GeoDataFrame, out_path: Path, save_path: Path):
     fig, axs = plt.subplots(1, 3, figsize=(30, 10))
 
     # Read in New Raster
@@ -160,6 +160,8 @@ def generate_plots(admin_gdf, vector_gdf, out_path, save_path):
     plt.tight_layout()
     plt.savefig(save_path)
 
+    return
+
     
 
 
@@ -168,7 +170,7 @@ def generate_plots(admin_gdf, vector_gdf, out_path, save_path):
 
 
 # Main function that takes in path files and processes through all the steps to compute distance
-def compute_distance(admin0_path, vector_file_path, meta_data_path, out_path, image_save_path):
+def compute_distance(admin0_path: Path, vector_file_path: Path, meta_data_path: Path, out_path: Path, image_save_path: Path):
 
     # Step 1: Read in admin0 file
     admin0_path = admin0_path
