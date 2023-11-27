@@ -20,7 +20,7 @@ from typing import Tuple
 from typing import Any
 
 # Generate expanded bounding box for rasterization
-def expand_bounding_box(gdf: GeoDataFrame -> pd.DataFrame:
+def expand_bounding_box(gdf: GeoDataFrame) -> pd.DataFrame:
 
     # Generate original bounding box 
     bbox = gdf.geometry.bounds
