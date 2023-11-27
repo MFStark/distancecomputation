@@ -17,9 +17,10 @@ from shapely.geometry import Point
 
 from pathlib import Path
 from typing import Tuple
+from typing import Any
 
 # Generate expanded bounding box for rasterization
-def expand_bounding_box(gdf: GeoDataFrame) -> pd.DataFrame:
+def expand_bounding_box(gdf: Any) -> pd.DataFrame:
 
     # Generate original bounding box 
     bbox = gdf.geometry.bounds
@@ -52,7 +53,7 @@ def expand_bounding_box(gdf: GeoDataFrame) -> pd.DataFrame:
     return expanded_bbox
 
 # Get Meta data from TIF file
-def get_metadata(tif_file_path: Path) -> Tuple[dict, Tuple[int, int], Affine, CRS]:
+def get_metadata(tif_file_path: Path) -> Tuple[dict, Tuple[int, int], Any, Any]:
     with rasterio.open(tif_file_path) as src:
         out_meta = src.meta
         shape = src.shape
@@ -66,7 +67,7 @@ def get_metadata(tif_file_path: Path) -> Tuple[dict, Tuple[int, int], Affine, CR
 
 
 # Generate expanded shape and new transform 
-def expand_shape_and_transform(original_shape: Tuple[int, int], original_transform: Affine) -> Tuple[Tuple[int, int], Affine]:
+def expand_shape_and_transform(original_shape: Tuple[int, int], original_transform: Any) -> Tuple[Tuple[int, int], Any]:
 
     # New shape
     new_shape = (original_shape[0]*3, original_shape[1]*3)
@@ -88,7 +89,7 @@ def expand_shape_and_transform(original_shape: Tuple[int, int], original_transfo
 
 
 # Rasterize geometeries found in a GDF onto an empty array based on an existing transform
-def rasterize(gdf: GeoDataFrame, out_shape: Tuple[int, int], transform: Affine) -> np.ndarray:
+def rasterize(gdf: Any, out_shape: Tuple[int, int], transform: Any) -> np.ndarray:
     # Rasterize the GeoDataFrame
     rasterized = rasterio.features.rasterize(
         [(geom, 1) for geom in gdf.geometry],
@@ -146,7 +147,7 @@ def mask_admin(in_path: Path, admin_path: Path, out_path: Path):
 
 # Create Diagnostic Plots
 
-def generate_plots(admin_gdf: GeoDataFrame, vector_gdf: GeoDataFrame, out_path: Path, save_path: Path):
+def generate_plots(admin_gdf: Any, vector_gdf: Any, out_path: Path, save_path: Path):
     fig, axs = plt.subplots(1, 3, figsize=(30, 10))
 
     # Read in New Raster
