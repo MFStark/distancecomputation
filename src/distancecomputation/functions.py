@@ -194,46 +194,46 @@ def generate_plots(admin_gdf: GeoDataFrame, vector_gdf: GeoDataFrame, out_path: 
 # Main function that takes in path files and processes through all the steps to compute distance
 def compute_distance(admin0_path: Path, vector_file_path: Path, meta_data_path: Path, out_path: Path, image_save_path: Path) -> None:
 
-    # Step 1: Read in admin0 file
+    # Step 1:Read in admin0 file
     admin0_path = admin0_path
     admin0 = gpd.read_file(admin0_path)
 
-    # Step 2: Generate Expanded Bounding Box
+    # Step 2:Generate Expanded Bounding Box
     expanded_bbox = expand_bounding_box(admin0)
 
-    # Step 3: Read in vector file
+    # Step 3:Read in vector file
     vector_file_path = vector_file_path
     vector_gdf = gpd.read_file(vector_file_path)
     vector_gdf = vector_gdf.to_crs(admin0.crs)
-    # Step 4: Subest Vector file path with Expanded Bounding Box
+    # Step 4:Subest Vector file path with Expanded Bounding Box
     vector_gdf_subset = vector_gdf.cx[expanded_bbox.iloc[0]['minx']:expanded_bbox.iloc[0]['maxx'],
                               expanded_bbox.iloc[0]['miny']:expanded_bbox.iloc[0]['maxy']]
-    # Step 5: Read in TIF file for metadata
+    # Step 5:Read in TIF file for metadata
     out_meta, shape, transform, target_crs = get_metadata(meta_data_path)
-    # Step 6: Generate new transform and shape
+    # Step 6:Generate new transform and shape
     new_shape, new_transform = expand_shape_and_transform(shape, transform)
-    # Step 7: Align files to target_crs
+    # Step 7:Align files to target_crs
     admin0 = admin0.to_crs(target_crs)
     vector_gdf_subset = vector_gdf_subset.to_crs(target_crs)
-    # Step 8: Rasterize vector file
+    # Step 8:Rasterize vector file
     rasterized = rasterize(vector_gdf_subset, new_shape, new_transform)
-    # Step 9: Compute Distance
+    # Step 9:Compute Distance
     out = distance_transform_edt(rasterized)
     print("Distance computed")
-    # Step 10: Subset original array shape from computed distances
+    # Step 10:Subset original array shape from computed distances
     original_out = subset_array(shape, out)
-    # Step 11: Write out tif file
+    # Step 11:Write out tif file
     original_out = original_out.astype(out_meta['dtype'])
 
     with rasterio.open(out_path, "w", **out_meta) as dest:
         dest.write(original_out.reshape((1, *original_out.shape)))
-    # Step 12: Stamp out border 
+    # Step 12:Stamp out border 
     mask_admin(out_path, admin0_path, out_path)
-    # Step 13: Create Diagnostic Plots
+    # Step 13:Create Diagnostic Plots
     generate_plots(admin0, vector_gdf_subset, out_path, image_save_path)
 
-    print('TIF saved at:', out_path)
-    print('Plots saved at:', image_save_path)
+    print('TIF saved at', out_path)
+    print('Plots saved at', image_save_path)
     
 
      
