@@ -46,6 +46,7 @@ repos:
         entry: poetry run flake8
         language: system
         types: [python]
+        args: ['--ignore=E203']
       - id: kacl-verify
         name: kacl-verify
         entry: poetry run kacl-cli verify
