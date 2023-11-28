@@ -23,7 +23,7 @@ from typing import Any
 # Generate expanded bounding box for rasterization
 def expand_bounding_box(gdf: GeoDataFrame) -> pd.DataFrame:
 
-    # Generate original bounding box 
+    # Generate original bounding box
     bbox = gdf.geometry.bounds
 
     # Extract bounding box coordinates as floats using iloc[0]
@@ -224,6 +224,14 @@ def compute_distance(admin0_path: Path, vector_file_path: Path, meta_data_path: 
     original_out = subset_array(shape, out)
     # Step 11:Write out tif file
     original_out = original_out.astype(out_meta['dtype'])
+
+
+
+
+
+
+
+
 
     with rasterio.open(out_path, "w", **out_meta) as dest:
         dest.write(original_out.reshape((1, *original_out.shape)))
