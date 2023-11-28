@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "distance-computation"
-version = "0.0.1"
-description = "ter data"
+version = "0.0.2"
+description = "Distance data"
 authors = [
     "mfiking <mfikingas@gmail.com>",
 ]

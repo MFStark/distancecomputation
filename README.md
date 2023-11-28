@@ -14,7 +14,7 @@
 
 ---
 
-ter data
+Distance data
 
 ## Installation
 
