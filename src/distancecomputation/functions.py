@@ -103,7 +103,6 @@ def rasterize(gdf: GeoDataFrame, out_shape: Tuple[int, int], transform: Affine) 
 
     # Switch 1s and 0s
     rasterized = np.logical_not(rasterized).astype(int)
-
     return rasterized
 
 # Subset expanded distance array to original size
@@ -120,8 +119,6 @@ def subset_array(original_shape: Tuple[int, int], computed_array: np.ndarray) ->
 
     return original_out
 
-
-
 # Used to stamp a country border on an existing raster image
 def mask_admin(in_path: Path, admin_path: Path, out_path: Path) -> None:
     with rasterio.open(in_path) as src:
@@ -136,7 +133,6 @@ def mask_admin(in_path: Path, admin_path: Path, out_path: Path) -> None:
             **kwargs        
         )
         out_meta = src.meta
-
     out_meta.update({"driver": "GTiff",
                      "nodata": np.nan,
                      "height": out_image.shape[1],
@@ -147,36 +143,28 @@ def mask_admin(in_path: Path, admin_path: Path, out_path: Path) -> None:
         dest.write(out_image)
 
 # Create Diagnostic Plots
-
 def generate_plots(admin_gdf: GeoDataFrame, vector_gdf: GeoDataFrame, out_path: Path, save_path: Path) -> None:
     fig, axs = plt.subplots(1, 3, figsize=(30, 10))
-
     # Read in New Raster
     with rasterio.open(out_path) as src:
         combined_raster = src.read(1, masked=True)
         transform = src.transform
-
     log_combined_raster = np.log(1 + combined_raster)
-
     # Plot 1: Original vector geometries and admin boundary
     vector_gdf.plot(ax=axs[0], edgecolor='red', facecolor='none')
     admin_gdf.boundary.plot(ax=axs[0], color='k')
     axs[0].set_title('Original Vector Geometries and Admin Boundary')
-
     # Plot 2: Combined raster with admin boundary overlay
     im = axs[1].imshow(combined_raster, extent=(transform[2], transform[2] + transform[0]*combined_raster.shape[1],
                                        transform[5] + transform[4]*combined_raster.shape[0], transform[5]), cmap='viridis')
     fig.colorbar(im, ax=axs[1])
     axs[1].set_title('Distance with Country Overlay')
-
     admin_gdf.boundary.plot(ax=axs[1], color='red')
-
     # Plot 3: Log-transformed raster with admin boundary overlay
     im = axs[2].imshow(log_combined_raster, extent=(transform[2], transform[2] + transform[0]*combined_raster.shape[1],
                                        transform[5] + transform[4]*combined_raster.shape[0], transform[5]), cmap='viridis')
     fig.colorbar(im, ax=axs[2])
     axs[2].set_title('Log Distance with Country Overlay')
-
     admin_gdf.boundary.plot(ax=axs[2], color='red')
 
     plt.tight_layout()
@@ -184,23 +172,13 @@ def generate_plots(admin_gdf: GeoDataFrame, vector_gdf: GeoDataFrame, out_path: 
 
     return
 
-    
-
-
-
-
-
-
 # Main function that takes in path files and processes through all the steps to compute distance
 def compute_distance(admin0_path: Path, vector_file_path: Path, meta_data_path: Path, out_path: Path, image_save_path: Path) -> None:
-
     # Step 1:Read in admin0 file
     admin0_path = admin0_path
     admin0 = gpd.read_file(admin0_path)
-
     # Step 2:Generate Expanded Bounding Box
     expanded_bbox = expand_bounding_box(admin0)
-
     # Step 3:Read in vector file
     vector_file_path = vector_file_path
     vector_gdf = gpd.read_file(vector_file_path)
@@ -224,25 +202,12 @@ def compute_distance(admin0_path: Path, vector_file_path: Path, meta_data_path: 
     original_out = subset_array(shape, out)
     # Step 11:Write out tif file
     original_out = original_out.astype(out_meta['dtype'])
-
-
-
-
-
-
-
-
-
     with rasterio.open(out_path, "w", **out_meta) as dest:
         dest.write(original_out.reshape((1, *original_out.shape)))
     # Step 12:Stamp out border 
     mask_admin(out_path, admin0_path, out_path)
     # Step 13:Create Diagnostic Plots
     generate_plots(admin0, vector_gdf_subset, out_path, image_save_path)
-
     print('TIF saved at', out_path)
     print('Plots saved at', image_save_path)
-    
-
-     
     return
