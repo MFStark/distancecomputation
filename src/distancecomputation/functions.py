@@ -1,5 +1,6 @@
 import pandas as pd
 import geopandas as gpd
+from geopandas import GeoDataFrame
 import numpy as np
 
 import rasterio
@@ -122,7 +123,7 @@ def subset_array(original_shape: Tuple[int, int], computed_array: np.ndarray) ->
 
 
 # Used to stamp a country border on an existing raster image
-def mask_admin(in_path: Path, admin_path: Path, out_path: Path):
+def mask_admin(in_path: Path, admin_path: Path, out_path: Path) -> None:
     with rasterio.open(in_path) as src:
         admin = gpd.read_file(admin_path).to_crs(src.crs)
         kwargs = {
@@ -147,7 +148,7 @@ def mask_admin(in_path: Path, admin_path: Path, out_path: Path):
 
 # Create Diagnostic Plots
 
-def generate_plots(admin_gdf: GeoDataFrame, vector_gdf: GeoDataFrame, out_path: Path, save_path: Path):
+def generate_plots(admin_gdf: GeoDataFrame, vector_gdf: GeoDataFrame, out_path: Path, save_path: Path) -> None:
     fig, axs = plt.subplots(1, 3, figsize=(30, 10))
 
     # Read in New Raster
@@ -191,7 +192,7 @@ def generate_plots(admin_gdf: GeoDataFrame, vector_gdf: GeoDataFrame, out_path: 
 
 
 # Main function that takes in path files and processes through all the steps to compute distance
-def compute_distance(admin0_path: Path, vector_file_path: Path, meta_data_path: Path, out_path: Path, image_save_path: Path):
+def compute_distance(admin0_path: Path, vector_file_path: Path, meta_data_path: Path, out_path: Path, image_save_path: Path) -> None:
 
     # Step 1: Read in admin0 file
     admin0_path = admin0_path

@@ -1,13 +1,13 @@
 import click
 import argparse
-from my_package.function import compute_distance
+from distance_computation.functions import compute_distance
 
 @click.command()
 def cli() -> None:
     pass
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description='Compute distance using CLI')
     parser.add_argument('admin0_path', help='Path to admin0 file')
     parser.add_argument('vector_file_path', help='Path to vector file')
