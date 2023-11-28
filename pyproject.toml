@@ -104,7 +104,6 @@ show_error_codes = true
 [[tool.mypy.overrides]]
 module = ["setuptools", "distance_computation.functions", "pandas", "geopandas", "scipy.ndimage", "matplotlib", "matplotlib.pyplot", "rasterio", "rasterio.mask", "rasterio.plot", "rasterio.crs", "affine"]
 ignore_missing_imports = true
-ignore = ["E203"]
 
 [tool.tryceratops]
 ignore=["TRY003"]
