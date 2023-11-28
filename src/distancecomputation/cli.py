@@ -7,6 +7,7 @@ def cli() -> None:
     pass
 
 
+
 def main() -> None:
     parser = argparse.ArgumentParser(description='Compute distance using CLI')
     parser.add_argument('admin0_path', help='Path to admin0 file')
