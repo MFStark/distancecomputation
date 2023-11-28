@@ -219,7 +219,7 @@ def compute_distance(admin0_path: Path, vector_file_path: Path, meta_data_path: 
     rasterized = rasterize(vector_gdf_subset, new_shape, new_transform)
     # Step 9: Compute Distance
     out = distance_transform_edt(rasterized)
-    print(f"Distance computed")
+    print("Distance computed")
     # Step 10: Subset original array shape from computed distances
     original_out = subset_array(shape, out)
     # Step 11: Write out tif file
@@ -232,8 +232,8 @@ def compute_distance(admin0_path: Path, vector_file_path: Path, meta_data_path: 
     # Step 13: Create Diagnostic Plots
     generate_plots(admin0, vector_gdf_subset, out_path, image_save_path)
 
-    print('TIF saved at: ', out_path)
-    print('Plots saved at: ', image_save_path)
+    print('TIF saved at:', out_path)
+    print('Plots saved at:', image_save_path)
     
 
      
